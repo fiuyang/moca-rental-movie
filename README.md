@@ -45,7 +45,7 @@ Moca Rental Movie API is a modern Point of Sale (POS) system built with NestJS, 
 
 ```bash
    git clone git@github.com:fiuyang/moca-rental-movie.git
-   cd moca-pos
+   cd moca-rental-movie
 ```
 
 ## Copy .env file
