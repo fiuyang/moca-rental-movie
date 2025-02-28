@@ -37,15 +37,20 @@ import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../common/decorator/current-user.decorator';
 import { ICurrentUser } from '../common/types/user.interface';
 import { PayLateFeeDto } from '../transaction/dto/pay-late-fee.dto';
+import { RolesGuard } from '../common/guards/role.guard';
+import { Role } from '../common/enums/role.enum';
+import { Roles } from '../common/decorator/roles.decorator';
 
 @ApiTags('Rental')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
+@UseGuards(RolesGuard)
 @Controller('rental')
 export class RentalController {
   constructor(private readonly rentalService: RentalService) {}
 
   @Post()
+  @Roles(Role.ADMIN, Role.RENTER)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create rental' })
   @ApiBody({ type: CreateRentalDto })
@@ -70,6 +75,7 @@ export class RentalController {
   }
 
   @Post('pay')
+  @Roles(Role.ADMIN, Role.RENTER)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Pay rental' })
   @ApiBody({ type: CreateProcessPayDto })
@@ -90,6 +96,7 @@ export class RentalController {
   }
 
   @Post('late-fee/payment')
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Pay late fee for a rental' })
   @ApiBody({ type: PayLateFeeDto })
@@ -108,6 +115,7 @@ export class RentalController {
   }
 
   @Get('overdue')
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get All Over Due Rental' })
   @JsonPagingResponse(RentalResponseDto, 200, 'Success', true)
@@ -128,6 +136,7 @@ export class RentalController {
   }
 
   @Get()
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get All rental' })
   @JsonPagingResponse(RentalResponseDto, 200, 'Success', true)
@@ -147,6 +156,7 @@ export class RentalController {
   }
 
   @Get('history')
+  @Roles(Role.RENTER)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get History rental user' })
   @JsonPagingResponse(RentalResponseDto, 200, 'Success', true)
@@ -170,6 +180,7 @@ export class RentalController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMIN, Role.RENTER)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'First rental' })
   @JsonSuccessResponse(RentalResponseDto, 200, 'Success')
@@ -189,6 +200,7 @@ export class RentalController {
   }
 
   @Patch(':id')
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update status rental' })
   @ApiBody({ type: UpdateRentalDto })
@@ -210,6 +222,7 @@ export class RentalController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete rental' })
   @JsonSuccessResponse(null, 200, 'Rental successfully deleted')

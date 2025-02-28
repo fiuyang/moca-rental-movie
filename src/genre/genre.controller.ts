@@ -1,15 +1,16 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseInterceptors,
+  Get,
   HttpCode,
   HttpStatus,
-  Query, UseGuards,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { GenreService } from './genre.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
@@ -33,14 +34,18 @@ import { JsonBadRequestDto } from '../common/dto/api-response.dto';
 import { FilterGenre } from './dto/filter-genre.dto';
 import { GenreResponseDto } from './dto/genre-response.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
+import { Roles } from 'src/common/decorator/roles.decorator';
+import { Role } from '../common/enums/role.enum';
 
 @ApiTags('Genre')
-@UseGuards(JwtAuthGuard)
 @Controller('genre')
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create genre' })
@@ -100,6 +105,8 @@ export class GenreController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update genre' })
@@ -123,6 +130,8 @@ export class GenreController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete genre' })

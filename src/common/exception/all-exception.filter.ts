@@ -31,7 +31,7 @@ export class AllExceptionFilter implements ExceptionFilter {
           ? errorResponse['message'] || errorResponse
           : errorResponse,
       trace_id: traceId,
-      stack: exception.stack,
+      // stack: exception.stack,
     };
 
     this.logger.error(

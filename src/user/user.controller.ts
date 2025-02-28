@@ -33,15 +33,20 @@ import { FilterUser } from './dto/filter-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { ParamInterceptor } from '../common/interceptor/param.interceptor';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
+import { Roles } from '../common/decorator/roles.decorator';
+import { Role } from '../common/enums/role.enum';
 
 @ApiTags('User')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
+@UseGuards(RolesGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({ type: CreateUserDto })
   @ApiOperation({ summary: 'Create user' })
@@ -63,6 +68,7 @@ export class UserController {
   }
 
   @Get()
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get All user' })
   @JsonPagingResponse(UserResponseDto, 200, 'Success', true)
@@ -82,6 +88,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'First user' })
   @JsonSuccessResponse(UserResponseDto, 200, 'Success')
@@ -101,6 +108,7 @@ export class UserController {
   }
 
   @Patch(':id')
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update user' })
   @ApiBody({ type: UpdateUserDto })
@@ -123,6 +131,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete user' })
   @JsonSuccessResponse(null, 200, 'User successfully deleted')

@@ -9,7 +9,8 @@ import {
   UseInterceptors,
   Query,
   HttpStatus,
-  HttpCode, UseGuards,
+  HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -33,14 +34,18 @@ import { webResponse } from '../common/helper/web.helper';
 import { WebResponse } from '../common/interface/web.interface';
 import { MovieResponseDto } from './dto/movie-response.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
+import { Roles } from '../common/decorator/roles.decorator';
+import { Role } from '../common/enums/role.enum';
 
 @ApiTags('Movie')
-@UseGuards(JwtAuthGuard)
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create movie' })
@@ -100,6 +105,8 @@ export class MovieController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update movie' })
@@ -123,6 +130,8 @@ export class MovieController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete movie' })

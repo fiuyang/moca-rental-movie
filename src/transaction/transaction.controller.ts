@@ -27,15 +27,20 @@ import { FilterTransaction } from './dto/filter-transaction.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../common/decorator/current-user.decorator';
 import { ICurrentUser } from '../common/types/user.interface';
+import { RolesGuard } from '../common/guards/role.guard';
+import { Roles } from '../common/decorator/roles.decorator';
+import { Role } from '../common/enums/role.enum';
 
 @ApiTags('Transaction')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
+@UseGuards(RolesGuard)
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Get()
+  @Roles(Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get All transaction' })
   @JsonPagingResponse(TransactionResponseDto, 200, 'Success', true)
@@ -55,6 +60,7 @@ export class TransactionController {
   }
 
   @Get('history')
+  @Roles(Role.RENTER)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get History transaction user' })
   @JsonPagingResponse(TransactionResponseDto, 200, 'Success', true)
@@ -78,6 +84,7 @@ export class TransactionController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMIN, Role.RENTER)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'First transaction' })
   @JsonSuccessResponse(TransactionResponseDto, 200, 'Success')
