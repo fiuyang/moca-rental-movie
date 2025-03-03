@@ -77,6 +77,11 @@ $ npm run start:prod
 $ http://localhost:3000/api/docs/
 ```
 
+### Check Docs Scalar
+```bash
+$ http://localhost:3000/scalar/docs/
+```
+
 ## Run tests
 
 ```bash

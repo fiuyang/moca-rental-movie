@@ -10,6 +10,7 @@ import {
   SuccessResponseDto,
 } from './common/dto/api-response.dto';
 import { AllExceptionFilter } from './common/exception/all-exception.filter';
+import { apiReference } from '@scalar/nestjs-api-reference';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -59,6 +60,17 @@ async function bootstrap() {
       displayRequestDuration: true,
     },
   });
+
+  // Scalar Docs
+  app.use(
+    '/scalar/docs',
+    apiReference({
+      cdn: 'https://cdn.jsdelivr.net/npm/@scalar/api-reference@latest',
+      spec: {
+        content: document,
+      },
+    }),
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }
