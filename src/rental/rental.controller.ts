@@ -42,9 +42,8 @@ import { Role } from '../common/enums/role.enum';
 import { Roles } from '../common/decorator/roles.decorator';
 
 @ApiTags('Rental')
-@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('rental')
 export class RentalController {
   constructor(private readonly rentalService: RentalService) {}

@@ -6,6 +6,7 @@ import { UserService } from '../../user/user.service';
 
 export interface JwtPayload {
   sub: string; // User ID
+  role: string;
   email: string;
 }
 
@@ -25,6 +26,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.userService.findByEmail(payload.email);
     if (!user) throw new UnauthorizedException();
 
-    return { id: payload.sub, email: payload.email };
+    return { id: payload.sub, role: payload.role, email: payload.email };
   }
 }

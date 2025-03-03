@@ -32,9 +32,8 @@ import { Roles } from '../common/decorator/roles.decorator';
 import { Role } from '../common/enums/role.enum';
 
 @ApiTags('Transaction')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}

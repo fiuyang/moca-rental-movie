@@ -38,9 +38,8 @@ import { Roles } from '../common/decorator/roles.decorator';
 import { Role } from '../common/enums/role.enum';
 
 @ApiTags('User')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
