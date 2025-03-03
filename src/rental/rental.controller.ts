@@ -21,7 +21,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateProcessPayDto } from './dto/create-process-pay.dto';
+import {
+  CreatePaymentCashDto,
+  CreateProcessPayDto,
+} from './dto/create-process-pay.dto';
 import { FilterGenre } from '../genre/dto/filter-genre.dto';
 import {
   JsonErrorResponse,
@@ -32,7 +35,10 @@ import { JsonBadRequestDto } from '../common/dto/api-response.dto';
 import { webResponse } from '../common/helper/web.helper';
 import { WebResponse } from '../common/interface/web.interface';
 import { BankTransferResponseDto } from '../midtrans/dto/bank-transfer-response.dto';
-import { RentalResponseDto } from './dto/rental-response.dto';
+import {
+  PaymentCashResponseDto,
+  RentalResponseDto,
+} from './dto/rental-response.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../common/decorator/current-user.decorator';
 import { ICurrentUser } from '../common/types/user.interface';
@@ -91,7 +97,29 @@ export class RentalController {
     @Body() createProcessPayDto: CreateProcessPayDto,
   ): Promise<WebResponse<BankTransferResponseDto>> {
     const data = await this.rentalService.processPayment(createProcessPayDto);
-    return webResponse(200, 'Pay successfully', data);
+    return webResponse(200, 'Payment successfully', data);
+  }
+
+  @Post('pay/cash')
+  @Roles(Role.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Payment Cash rental' })
+  @ApiBody({ type: CreatePaymentCashDto })
+  @JsonSuccessResponse(PaymentCashResponseDto, 201, 'Payment cash successfully')
+  @JsonErrorResponse(401, 'Record Not Found')
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+    type: JsonBadRequestDto,
+  })
+  @JsonErrorResponse(403, 'Forbidden')
+  @JsonErrorResponse(500, 'Internal Server Error')
+  async payCash(
+    @Body() createPaymentCashDto: CreatePaymentCashDto,
+  ): Promise<WebResponse<PaymentCashResponseDto>> {
+    const data =
+      await this.rentalService.processCashPayment(createPaymentCashDto);
+    return webResponse(200, 'Payment cash successfully', data);
   }
 
   @Post('late-fee/payment')

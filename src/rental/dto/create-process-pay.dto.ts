@@ -23,3 +23,13 @@ export class CreateProcessPayDto {
   @IsEnum(Bank)
   bank: Bank;
 }
+
+export class CreatePaymentCashDto {
+  @ApiProperty({
+    required: false,
+    example: '9abfc1ca-adc2-4894-84df-4f99df561708',
+  })
+  @IsNotEmpty()
+  @IsExist([Rental, 'id'])
+  rental_id: string;
+}

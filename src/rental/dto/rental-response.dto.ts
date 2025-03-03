@@ -46,3 +46,12 @@ export class RentalResponseDto extends BaseResponseDto {
   @Type(() => MovieWithoutGenresDto)
   movie?: MovieWithoutGenresDto;
 }
+
+export class PaymentCashResponseDto {
+  @ApiProperty({ example: '30000.00' })
+  gross_amount: string;
+
+  @ApiProperty({ example: 'paid' })
+  @Expose()
+  status: string;
+}

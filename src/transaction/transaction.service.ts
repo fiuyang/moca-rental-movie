@@ -30,6 +30,7 @@ export class TransactionService {
     rental_id: string,
     payment_method: string,
     order_id: string,
+    status: string,
     gross_amount: number,
   ): Promise<void> {
     const transaction = this.transactionRepo.create({
@@ -38,7 +39,7 @@ export class TransactionService {
       payment_method: payment_method,
       order_id: order_id,
       gross_amount: gross_amount,
-      status: 'pending',
+      status: status,
       payment_type: 'rental',
     });
 

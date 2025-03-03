@@ -104,18 +104,13 @@ export class UserService {
     if (!existingUser) {
       throw new NotFoundException('User not found');
     }
-    Object.assign(existingUser, updateUserDto);
 
-    if (
-      updateUserDto.password &&
-      updateUserDto.password !== existingUser.password
-    ) {
-      updateUserDto.password = await hashPassword(updateUserDto.password);
-    } else {
-      updateUserDto.password = existingUser.password;
+    const { password, ...dto } = updateUserDto;
+    Object.assign(existingUser, dto);
+
+    if (password) {
+      existingUser.password = await hashPassword(password);
     }
-
-    Object.assign(existingUser, updateUserDto);
 
     await this.userRepo.save(existingUser);
   }

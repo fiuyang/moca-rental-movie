@@ -12,8 +12,14 @@ import { DataSource, Repository } from 'typeorm';
 import { Movie } from '../movie/entities/movie.entity';
 import { MidtransService } from '../midtrans/midtrans.service';
 import { TransactionService } from '../transaction/transaction.service';
-import { CreateProcessPayDto } from './dto/create-process-pay.dto';
-import { RentalResponseDto } from './dto/rental-response.dto';
+import {
+  CreatePaymentCashDto,
+  CreateProcessPayDto,
+} from './dto/create-process-pay.dto';
+import {
+  PaymentCashResponseDto,
+  RentalResponseDto,
+} from './dto/rental-response.dto';
 import { FilterRental } from './dto/filter-rental.dto';
 import { paginate } from '../common/helper/paging.helper';
 import { plainToInstance } from 'class-transformer';
@@ -113,6 +119,7 @@ export class RentalService {
         rental.id,
         createProcessPayDto.bank,
         orderId,
+        'pending',
         grossAmount,
       );
 
@@ -123,6 +130,39 @@ export class RentalService {
         error,
       );
     }
+  }
+
+  async processCashPayment(
+    createPaymentCashDto: CreatePaymentCashDto,
+  ): Promise<PaymentCashResponseDto> {
+    const rental = await this.rentalRepo.findOne({
+      where: { id: createPaymentCashDto.rental_id },
+      relations: ['user'],
+    });
+
+    if (!rental) throw new NotFoundException('Rental not found');
+    if (rental.payment_status !== 'pending')
+      throw new BadRequestException('Payment already processed');
+
+    const orderId = `RENTAL-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+    const grossAmount = Number(rental.total_price);
+
+    await this.transactionService.create(
+      rental.user.id,
+      rental.id,
+      'cash',
+      orderId,
+      'paid',
+      grossAmount,
+    );
+
+    rental.payment_status = 'paid';
+    await this.rentalRepo.save(rental);
+
+    return {
+      gross_amount: grossAmount.toFixed(2),
+      status: 'paid',
+    };
   }
 
   async processPayLateFee(dto: PayLateFeeDto): Promise<void> {
@@ -304,7 +344,10 @@ export class RentalService {
   }
 
   async update(id: string, updateRentalDto: UpdateRentalDto): Promise<void> {
-    const rental = await this.rentalRepo.findOne({ where: { id }, relations: ['movie'] });
+    const rental = await this.rentalRepo.findOne({
+      where: { id },
+      relations: ['movie'],
+    });
     if (!rental) throw new NotFoundException('Rental not found.');
 
     let late_fee = rental.late_fee;
