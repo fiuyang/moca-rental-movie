@@ -10,6 +10,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { FilterUser } from './dto/filter-user.dto';
 import { paginate } from '../common/helper/paging.helper';
 import { plainToInstance } from 'class-transformer';
+import { Role } from '../common/enums/role.enum';
 
 @Injectable()
 export class UserService {
@@ -22,6 +23,7 @@ export class UserService {
     await this.userRepo.save({
       ...createUserDto,
       password: await hashPassword(createUserDto.password),
+      role: Role.ADMIN,
     });
   }
 
