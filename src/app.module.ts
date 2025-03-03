@@ -28,6 +28,17 @@ import { AuthModule } from './auth/auth.module';
         migrations: [__dirname + '/migrations/*.{ts,.js}'],
         migrationsRun: true,
         synchronize: configService.get<boolean>('DB_SYNC'),
+        extra: {
+          max: configService.get<number>('DB_MAX_CONNECTIONS', 5),
+          idleTimeoutMillis: configService.get<number>(
+            'DB_IDLE_TIMEOUT',
+            30000,
+          ),
+          connectionTimeoutMillis: configService.get<number>(
+            'DB_CONNECTION_TIMEOUT',
+            2000,
+          ),
+        },
       }),
     }),
     GenreModule,
