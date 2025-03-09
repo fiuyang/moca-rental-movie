@@ -11,7 +11,9 @@ export class WebhookController {
 
   @Post('midtrans')
   @ApiBody({ type: MidtransWebhookDto })
-  async midtransWebhook(@Body() payload: MidtransWebhookDto): Promise<WebResponse<null>> {
+  async midtransWebhook(
+    @Body() payload: MidtransWebhookDto,
+  ): Promise<WebResponse<null>> {
     if (!payload.signature_key) {
       throw new BadRequestException('Missing signature_key in payload');
     }

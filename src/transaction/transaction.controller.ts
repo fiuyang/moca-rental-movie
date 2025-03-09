@@ -43,7 +43,8 @@ export class TransactionController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get All transaction' })
   @JsonPagingResponse(TransactionResponseDto, 200, 'Success', true)
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -63,7 +64,8 @@ export class TransactionController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get History transaction user' })
   @JsonPagingResponse(TransactionResponseDto, 200, 'Success', true)
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -87,7 +89,8 @@ export class TransactionController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'First transaction' })
   @JsonSuccessResponse(TransactionResponseDto, 200, 'Success')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',

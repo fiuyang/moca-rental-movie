@@ -51,7 +51,8 @@ export class GenreController {
   @ApiOperation({ summary: 'Create genre' })
   @ApiBody({ type: CreateGenreDto })
   @JsonSuccessResponse(null, 201, 'Genre successfully created')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -70,7 +71,8 @@ export class GenreController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get All genre' })
   @JsonPagingResponse(GenreResponseDto, 200, 'Success', true)
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -89,7 +91,8 @@ export class GenreController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'First genre' })
   @JsonSuccessResponse(GenreResponseDto, 200, 'Success')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -112,7 +115,8 @@ export class GenreController {
   @ApiOperation({ summary: 'Update genre' })
   @ApiBody({ type: UpdateGenreDto })
   @JsonSuccessResponse(null, 200, 'Genre successfully updated')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -136,7 +140,8 @@ export class GenreController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete genre' })
   @JsonSuccessResponse(null, 200, 'Genre successfully deleted')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(404, 'Record Not Found')
+  @JsonErrorResponse(401, 'Unauthorized')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',

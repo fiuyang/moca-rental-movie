@@ -38,7 +38,7 @@ export class AuthController {
   @ApiBody({ type: SignUpDto })
   @ApiOperation({ summary: 'SignUp user' })
   @JsonSuccessResponse(null, 201, 'Register successfully')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(400, 'Record Not Found')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -56,7 +56,7 @@ export class AuthController {
   @ApiBody({ type: SignInDto })
   @ApiOperation({ summary: 'SignIn user' })
   @JsonSuccessResponse(AuthResponse, 200, 'Login successfully')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(400, 'Record Not Found')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
@@ -98,7 +98,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Logout user' })
   @JsonSuccessResponse(null, 200, 'Logout successfully')
-  @JsonErrorResponse(401, 'Record Not Found')
+  @JsonErrorResponse(400, 'Record Not Found')
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request',
